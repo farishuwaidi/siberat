@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1
+FROM golang:1.21-alpine AS builder
+
+WORKDIR /app
+
+# Copy go.mod dan go.sum lalu download dependency
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Salin semua file project
+COPY . .
+
+# Build aplikasi
+RUN go build -o out
+
+# Tahap final image ringan
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=builder /app/out .
+
+# Port yang digunakan oleh app
+EXPOSE 8080
+
+CMD ["./out"]
