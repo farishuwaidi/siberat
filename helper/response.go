@@ -3,17 +3,18 @@ package helper
 import "Siberat/dto"
 
 type ResponseWithData struct {
-	Code     int    `json:"code"`
-	Status   string `json:"statsus"`
-	Message  string `jsnon:"message"`
-	Data any `json:"data"`
+	Code    int    `json:"code"`
+	Status  string `json:"statsus"`
+	Message string `jsnon:"message"`
+	Data    any    `json:"data"`
 }
 
 type ResponseWithoutData struct {
-	Code int `json:"code"`
-	Status string `json:"status"`
+	Code    int    `json:"code"`
+	Status  string `json:"status"`
 	Message string `json:"message"`
 }
+
 func Response(params dto.ResponseParams) any {
 	var response any
 	var status string
@@ -25,16 +26,16 @@ func Response(params dto.ResponseParams) any {
 	}
 
 	if params.Data != nil {
-		response = &ResponseWithData {
-			Code: params.StatusCode,
-			Status: status,
+		response = &ResponseWithData{
+			Code:    params.StatusCode,
+			Status:  status,
 			Message: params.Message,
-			Data: params.Data,
+			Data:    params.Data,
 		}
 	} else {
-		response = &ResponseWithoutData {
-			Code: params.StatusCode,
-			Status: status,
+		response = &ResponseWithoutData{
+			Code:    params.StatusCode,
+			Status:  status,
 			Message: params.Message,
 		}
 	}

@@ -17,4 +17,7 @@ func UserRouter(api *gin.RouterGroup) {
 
 	api.Use(middleware.JWTMiddleWare())
 	api.GET("/users", UserHandler.GetAllUser)
+	api.PUT("/users/:id", UserHandler.UpdatedUser)
+	api.GET("/users/:id", UserHandler.GetUserByID)
+	api.DELETE("users/:id",UserHandler.DeleteUser)
 }
