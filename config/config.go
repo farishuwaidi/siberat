@@ -1,9 +1,7 @@
 package config
 
 import (
-	"log"
-
-	"github.com/spf13/viper"
+	"os"
 )
 
 type config struct {
@@ -18,32 +16,19 @@ type config struct {
 var ENV *config
 
 func LoadConfig() {
-	viper.SetConfigFile(".env")
-	viper.SetConfigType("env")
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err != nil {
-		panic("Error reading config file: "+ err.Error())
-	}
-
 	ENV = &config{
-		PORT: viper.GetString("PORT"),
-		DB_HOST: viper.GetString("DB_HOST"),
-		DB_PORT: viper.GetString("DB_PORT"),
-		DB_USER: viper.GetString("DB_USER"),
-		DB_PASSWORD: viper.GetString("DB_PASSWORD"),
-		DB_NAME: viper.GetString("DB_NAME"),
+		PORT:        getEnv("PORT", "8080"),
+		DB_HOST:     getEnv("DB_HOST", "localhost"),
+		DB_PORT:     getEnv("DB_PORT", "5433"),
+		DB_USER:     getEnv("DB_USER", "postgres"),
+		DB_PASSWORD: getEnv("DB_PASSWORD", "admin"),
+		DB_NAME:     getEnv("DB_NAME", "siberat"),
 	}
+}
 
-	if ENV.PORT == "" {
-		log.Fatal("port is required but not found")
+func getEnv(key string, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
 	}
-	if ENV.DB_HOST == "" {
-		log.Fatal("DB_HOST is required but not set")
-	}
-
-	if err := viper.Unmarshal(&ENV); err != nil {
-		panic("Error unmarshalling config: " + err.Error())
-	}
+	return fallback
 }
