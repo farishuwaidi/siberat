@@ -2,6 +2,7 @@ package handler
 
 import (
 	"Siberat/dto"
+	"Siberat/entity"
 	"Siberat/helper"
 	"Siberat/service"
 	"net/http"
@@ -102,6 +103,26 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
 			StatusCode: http.StatusBadRequest,
 			Message: "Invalid User ID",
+		}))
+		return
+	}
+
+	//ambil user login dari contex (set oleh middleware)
+	loggedInUser, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, helper.Response(dto.ResponseParams{
+			StatusCode: http.StatusUnauthorized,
+			Message: "Unauthorized",
+		}))
+		return
+	}
+	user := loggedInUser.(entity.User)
+
+	//tidak dapat menghapus diri sendiri
+	if user.ID == id {
+		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			StatusCode: http.StatusBadRequest,
+			Message: "You can't delete your self",
 		}))
 		return
 	}

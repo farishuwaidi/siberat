@@ -15,7 +15,7 @@ func UserRouter(api *gin.RouterGroup) {
 	UserService := service.NewUserService(userRepo)
 	UserHandler := handler.NewUserHandler(UserService)
 
-	api.Use(middleware.JWTMiddleWare())
+	api.Use(middleware.JWTMiddleWare(), middleware.AuthorizeRoles("Petugas Bidang PP", "Petugas Bidang PSIP"))
 	api.GET("/users", UserHandler.GetAllUser)
 	api.PUT("/users/:id", UserHandler.UpdatedUser)
 	api.GET("/users/:id", UserHandler.GetUserByID)
