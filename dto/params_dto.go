@@ -1,7 +1,9 @@
 package dto
 
 type ResponseParams struct {
-	StatusCode int
-	Message    string
-	Data       any
+	Code    int
+	Success bool
+	Data    any
+	Message string
+	Param   any
 }

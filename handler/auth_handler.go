@@ -31,8 +31,9 @@ func (h *authHandler) Register(c *gin.Context) {
 	}
 
 	res := helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusCreated,
-		Message:    "RegisterSuccessfuly",
+		Code:    http.StatusCreated,
+		Success: true,
+		Message: "RegisterSuccessfuly",
 	})
 
 	c.JSON(http.StatusCreated, res)
@@ -53,11 +54,21 @@ func (h *authHandler) Login(c *gin.Context) {
 		return
 	}
 
-	res := helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusOK,
-		Message:    "Login success",
-		Data:       result,
-	})
+	// res := helper.Response(dto.ResponseParams{
+	// 	StatusCode: http.StatusOK,
+	// 	Message:    "Login success",
+	// 	Data:       result,
+	// })
+	fullresponse := dto.LoginResponseParam{
+		Code:    "0000",
+		Success: true,
+		Data:   *result,
+		Message: "Login success",
+		Param: dto.LoginRequest{
+			UserName: login.UserName,
+			Password: login.Password,
+		},
+	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, fullresponse)
 }

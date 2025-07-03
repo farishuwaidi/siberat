@@ -45,7 +45,7 @@ func (s *authService) Register(req *dto.RegisterRequest) error {
 		Email: req.Email,
 		NoHp: req.NoHp,
 		Password: passwrodHash,
-		RoleID: roleID,
+		IDRole: roleID,
 		KodeWilayah: req.KodeWilayah,
 	}
 	
@@ -59,12 +59,10 @@ func (s *authService) Register(req *dto.RegisterRequest) error {
 func (s *authService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
 	var data dto.LoginResponse
 
-	user, err := s.repository.GetUserByEmail(req.Email)
+	user, err := s.repository.GetUserByUsername(req.UserName)
 	if err != nil {
-		return nil, &errorhandler.NotFoundError{Message: "Email not found"}
+		return nil, &errorhandler.NotFoundError{Message: "User not found"}
 	}
-
-	s.repository.PreLoadUserRole(user)
 
 	if err := helper.VerifyPassword(user.Password, req.Password); err != nil {
 		return nil, &errorhandler.NotFoundError{Message: "Wrong Password"}
@@ -78,8 +76,22 @@ func (s *authService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
 	data = dto.LoginResponse{
 		ID: user.ID,
 		Name: user.Name,
+		Email: user.Email,
+		UserName: user.UserName,
+		EmailVerifiedAt: nil,
+		UserData: "",
+		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		KodeWilayah: user.KodeWilayah,
+		KodeWilayahProses: user.KodeWilayahProses,
+		NoHp: user.NoHp,
+		NoWa: user.NoWa,
+		UserNameSipandu: user.UserNameSipandu,
+		UserPasswordSipandu: user.UserPasswordSipandu,
+		IDRole: user.IDRole,
 		Token: token,
-		Role: user.Role.Role,
+		TokenExpiredAt: helper.GetTokenExpirationTime(),
+		PhotoUrl: "https://ui-avatars.com/api/" ,
 	}
 	return &data, nil
 }

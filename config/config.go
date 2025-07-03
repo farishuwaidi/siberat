@@ -22,7 +22,7 @@ func LoadConfig() {
 		DB_PORT:     getEnv("DB_PORT", "5433"),
 		DB_USER:     getEnv("DB_USER", "postgres"),
 		DB_PASSWORD: getEnv("DB_PASSWORD", "admin"),
-		DB_NAME:     getEnv("DB_NAME", "siberat"),
+		DB_NAME:     getEnv("DB_NAME", "dbpab_dev"),
 	}
 }
 

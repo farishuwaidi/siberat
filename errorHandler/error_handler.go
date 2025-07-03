@@ -25,7 +25,8 @@ func HandlerError(c *gin.Context, err error) {
 	}
 
 	response := helper.Response(dto.ResponseParams{
-		StatusCode: statusCode,
+		Code:    statusCode,
+		Success: false,
 		Message: err.Error(),
 	})
 

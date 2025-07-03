@@ -11,13 +11,35 @@ type RegisterRequest struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
+	UserName string `json:"username"`
 	Password string `json:"password"`
 }
 
 type LoginResponse struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Token string `json:"token"`
-	Role  string `json:"role"`
+	ID                  int     `json:"id"`
+	Name                string  `json:"sur_name"`
+	Email               string  `json:"email"`
+	UserName            string  `json:"username"`
+	EmailVerifiedAt     *string `json:"email_verified_at"`
+	UserData            string  `json:"user_data"`
+	CreatedAt           string  `json:"created_at"`
+	UpdatedAt           string  `json:"updated_at"`
+	KodeWilayah         string  `json:"kd_wil"`
+	KodeWilayahProses   string  `json:"kd_wil_kerja"`
+	NoHp                string  `json:"no_hp"`
+	NoWa                string  `json:"no_wa"`
+	UserNameSipandu     string  `json:"username_sipandu"`
+	UserPasswordSipandu string  `json:"userpassword_sipandu"`
+	IDRole              int     `json:"id_role"`
+	Token               string  `json:"token"`
+	TokenExpiredAt      string  `json:"token_expired_at"` // Optional, if you want to include token expiration
+	PhotoUrl            string  `json:"photo_url"`        // Optional, if you want to include user's photo URL
+}
+
+type LoginResponseParam struct {
+	Code    string        `json:"code"`
+	Success bool          `json:"success"`
+	Data    LoginResponse `json:"data"`
+	Message string        `json:"message"`
+	Param   LoginRequest  `json:"param"`
 }

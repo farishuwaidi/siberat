@@ -35,7 +35,7 @@ func (s *userService) GetUserByID(id int) (*entity.User, error){
 }
 
 func (s *userService) UpdateUser(id int, req *dto.UpdateUserRequest) error {
-	roleID, err := strconv.Atoi(req.Role)
+	roleID, err := strconv.Atoi(req.IDRole)
 	if err != nil {
 		return &errorhandler.BadRequestError{Message: "invalid role id"}
 	}
@@ -45,7 +45,7 @@ func (s *userService) UpdateUser(id int, req *dto.UpdateUserRequest) error {
 		UserName:    req.UserName,
 		Email:       req.Email,
 		NoHp:        req.NoHp,
-		RoleID:      roleID,
+		IDRole:      roleID,
 		KodeWilayah: req.KodeWilayah,
 	}
 	return s.repository.UpdateUser(id, user)

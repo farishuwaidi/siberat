@@ -49,3 +49,9 @@ func ValidateToken(tokenString string) (*int, error) {
 
 	return &claims.ID, nil
 }
+
+func GetTokenExpirationTime() string {
+    // Set token expiration to 24 hours from now (adjust as needed)
+    expireTime := time.Now().Add(24 * time.Hour)
+    return expireTime.Format("2006-01-02 15:04:05")
+}

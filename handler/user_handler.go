@@ -23,14 +23,17 @@ func (h *UserHandler) GetAllUser(c *gin.Context){
 	users, err := h.service.GetAllUser()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, helper.Response(dto.ResponseParams{
-			StatusCode:  http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
+			Success: false,
+			Data:    nil,
 			Message: "failed to retrieve users",
 		}))
 		return
 	}
 
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusOK,
+		Code:    http.StatusOK,
+		Success: true,
 		Message: "List of users",
 		Data: users,
 	}))
@@ -41,7 +44,8 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
+			Success: false,
 			Message: "invalid user id",
 		}))
 		return
@@ -50,16 +54,18 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	user, err := h.service.GetUserByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusNotFound,
+			Code:    http.StatusNotFound,
+			Success: false,
 			Message: "User not found",
 		}))
 		return
 	}
 
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusOK,
+		Code:    http.StatusOK,
+		Success: true,
 		Message: "User retrieved successfully",
-		Data: user,
+		Data:   user,
 	}))
 }
 
@@ -68,7 +74,8 @@ func (h *UserHandler) UpdatedUser(c *gin.Context) {
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
+			Success: false,
 			Message: "invalid user id",
 		}))
 		return
@@ -76,22 +83,25 @@ func (h *UserHandler) UpdatedUser(c *gin.Context) {
 	var req dto.UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusBadRequest,
-			Message:  err.Error(),
+			Code:    http.StatusBadRequest,
+			Success: false,
+			Message: err.Error(),
 		}))
 		return
 	}
 
 	if err := h.service.UpdateUser(id, &req); err != nil {
 		c.JSON(http.StatusInternalServerError, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusInternalServerError,
+			Code:    http.StatusInternalServerError,
+			Success: false,
 			Message: "failed to update user",
 		}))	
 		return
 	}
 
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusOK,
+		Code:    http.StatusOK,
+		Success: true,
 		Message: "User Update successfuly",
 	}))
 }
@@ -101,7 +111,8 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
+			Success: false,
 			Message: "Invalid User ID",
 		}))
 		return
@@ -111,7 +122,8 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	loggedInUser, exists := c.Get("user")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusUnauthorized,
+			Code:    http.StatusUnauthorized,
+			Success: false,
 			Message: "Unauthorized",
 		}))
 		return
@@ -121,7 +133,8 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	//tidak dapat menghapus diri sendiri
 	if user.ID == id {
 		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusBadRequest,
+			Code:    http.StatusBadRequest,
+			Success: false,
 			Message: "You can't delete your self",
 		}))
 		return
@@ -130,13 +143,15 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	err = h.service.DeleteUser(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, helper.Response(dto.ResponseParams{
-			StatusCode: http.StatusNotFound,
+			Code:    http.StatusNotFound,
+			Success: false,
 			Message: "User not found or already deleted",
 		}))
 		return
 	}
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
-		StatusCode: http.StatusOK,
+		Code:    http.StatusOK,
+		Success: true,
 		Message: "User Deleted Successfuly",
 	}))
 }

@@ -5,6 +5,6 @@ type UpdateUserRequest struct {
 	UserName    string `json:"username"`
 	Email       string `json:"email"`
 	NoHp        string `json:"noHp"`
-	Role        string `json:"role"` // Role ID (string → dikonversi ke int)
+	IDRole      string `json:"id_role"` // Role ID (string → dikonversi ke int)
 	KodeWilayah string `json:"kodeWilayah"`
 }

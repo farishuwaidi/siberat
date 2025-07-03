@@ -3,7 +3,6 @@ package router
 import (
 	"Siberat/config"
 	"Siberat/handler"
-	"Siberat/middleware"
 	"Siberat/repository"
 	"Siberat/service"
 
@@ -16,6 +15,7 @@ func AuthRouter(api *gin.RouterGroup) {
 	authHandler := handler.NewAuthHandler(authService)
 
 	api.POST("/login", authHandler.Login)
-	api.Use(middleware.JWTMiddleWare())
-	api.POST("/register", middleware.AuthorizeRoles("Petugas Bidang PP", "Petugas Bidang PSIP"),authHandler.Register)
+	// api.Use(middleware.JWTMiddleWare())
+	api.POST("/register",authHandler.Register)
+	// api.POST("/register", middleware.AuthorizeRoles("Petugas Bidang PP", "Petugas Bidang PSIP"),authHandler.Register)
 }
