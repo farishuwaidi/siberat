@@ -11,14 +11,14 @@ func JWTMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
-			errorhandler.HandlerError(c, &errorhandler.UnAuthorizedError{Message: "Unauthorized"})
+			errorhandler.HandlerError(c, &errorhandler.UnAuthorizedError{MessageText: "Unauthorized"}, nil)
 			c.Abort()
 			return
 		}
 
 		userId, err := helper.ValidateToken(tokenString)
 		if err != nil {
-			errorhandler.HandlerError(c,&errorhandler.UnAuthorizedError{Message: err.Error()})
+			errorhandler.HandlerError(c,&errorhandler.UnAuthorizedError{MessageText: err.Error()}, nil)
 			c.Abort()
 			return
 		}

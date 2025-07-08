@@ -1,34 +1,45 @@
 package errorhandler
 
 import (
-	"Siberat/dto"
 	"Siberat/helper"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func HandlerError(c *gin.Context, err error) {
-	var statusCode int
+type CustomError interface {
+	error
+	Code() string
+	Status() int
+	Message() string
+}
 
-	switch err.(type) {
-	case *NotFoundError:
-		statusCode = http.StatusNotFound
-	case *BadRequestError:
-		statusCode = http.StatusBadRequest
-	case *InternalServerError:
-		statusCode = http.StatusInternalServerError
-	case *UnAuthorizedError:
-		statusCode = http.StatusUnauthorized
-	default:
-		statusCode = http.StatusInternalServerError
+type BaseError struct {
+	ErrMessage string
+	ErrCode string
+	HTTPStatus int
+}
+
+func (e *BaseError) Error() string {return e.ErrMessage}
+func (e *BaseError) Code() string {return e.ErrCode}
+func (e *BaseError) Status() int {return e.HTTPStatus}
+func (e *BaseError) Message() string {return e.ErrMessage}
+
+func HandlerError(c *gin.Context, err error, param any) {
+	var customErr CustomError
+	if errors.As(err, &customErr) {
+		c.JSON( customErr.Status(), helper.ErrorResponseWithParam(
+			customErr.Code(),
+			customErr.Message(),
+			param,
+		))
+		return
 	}
 
-	response := helper.Response(dto.ResponseParams{
-		Code:    statusCode,
-		Success: false,
-		Message: err.Error(),
-	})
-
-	c.JSON(statusCode, response)
+	c.JSON(http.StatusInternalServerError, helper.ErrorResponseWithParam(
+		"0500",
+		"internal server error",
+		param,
+	))
 }

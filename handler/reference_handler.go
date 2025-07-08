@@ -1,0 +1,93 @@
+package handler
+
+import (
+	"Siberat/dto"
+	"Siberat/service"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+)
+
+type ReferenceHandler struct {
+	service service.ReferenceService
+}
+
+func NewReferenceHandler(s service.ReferenceService) *ReferenceHandler {
+	return &ReferenceHandler{service: s}
+}
+
+func (h *ReferenceHandler) GetKodeRole(c *gin.Context) {
+	role, err := h.service.GetKodeRole()
+	if err != nil {
+		c.JSON(500, gin.H{"code": 500, "success": false, "error": err.Error()})
+		return
+	}
+	for i := range role {
+		role[i].IDRole = strings.TrimSpace(role[i].IDRole)
+		// role[i].NameRole = strings.TrimSpace(role[i].NameRole)
+	}
+	c.JSON(200, gin.H{
+		"code": 200, 
+		"success": true, 
+		"data": role, 
+		"message": "sukses", 
+		"param": gin.H{
+			"query": nil,
+		}})
+}
+
+func (h *ReferenceHandler) GetKodeWil(c *gin.Context) {
+	wilayah, err := h.service.GetKodeWil()
+	if err != nil {
+		c.JSON(500, gin.H{"code": 500, "success": false, "error": err.Error()})
+		return
+	}
+
+	for i := range wilayah {
+		wilayah[i].KdWil = strings.TrimSpace(wilayah[i].KdWil)
+		wilayah[i].NmWil = strings.TrimSpace(wilayah[i].NmWil)
+		wilayah[i].AlWil = strings.TrimSpace(wilayah[i].AlWil)
+		wilayah[i].KabKota = strings.TrimSpace(wilayah[i].KabKota)
+		wilayah[i].Provinsi = strings.TrimSpace(wilayah[i].Provinsi)
+	}
+	c.JSON(200, gin.H{
+		"code": 200,
+		"success": true,
+		"data": wilayah,
+		"message": "Sukses",
+		"param": gin.H{
+			"query": nil,
+		}})
+}
+
+func (h *ReferenceHandler) GetKodeWilPusat(c *gin.Context) {
+	wilayah, err := h.service.GetKodeWil()
+	if err != nil {
+		c.JSON(500, gin.H{"code": 500, "success": false, "error": err.Error()})
+		return
+	}
+
+	filteredWilayah := []dto.ResponseKodeWil{}
+
+	for _, w := range wilayah {
+		w.KdWil = strings.TrimSpace(w.KdWil)
+		w.NmWil = strings.TrimSpace(w.NmWil)
+		w.AlWil = strings.TrimSpace(w.AlWil)
+		w.KabKota = strings.TrimSpace(w.KabKota)
+		w.Provinsi = strings.TrimSpace(w.Provinsi)
+
+		if strings.HasSuffix(w.KdWil, "0") {
+			filteredWilayah = append(filteredWilayah, w)
+		}
+	}
+
+	c.JSON(200, gin.H{
+		"code": 200,
+		"success": true,
+		"data": filteredWilayah,
+		"message": "Sukses",
+		"param": gin.H{
+			"query": nil,
+		},
+	})
+}

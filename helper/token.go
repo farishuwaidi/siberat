@@ -37,9 +37,9 @@ func ValidateToken(tokenString string) (*int, error) {
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return nil, errors.New("Invalid token signature")
+			return nil, errors.New("invalid token signature")
 		}
-		return nil, errors.New("Your token was expired")
+		return nil, errors.New("your token was expired")
 	}
 
 	claims, ok := token.Claims.(*JWTClaims)
