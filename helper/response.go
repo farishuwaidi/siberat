@@ -8,8 +8,8 @@ import (
 type ResponseWithData struct {
 	Code    string `json:"code"`
 	Success bool   `json:"success"`
-	Data    any    `json:"data"`
 	Message string `json:"message"`
+	Data    any    `json:"data"`
 	Param   any    `json:"param"` // Optional, if you want to include additional parameters
 }
 

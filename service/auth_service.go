@@ -2,16 +2,13 @@ package service
 
 import (
 	"Siberat/dto"
-	"Siberat/entity"
 	errorhandler "Siberat/errorHandler"
 	"Siberat/helper"
 	"Siberat/repository"
 	"fmt"
-	"strconv"
 )
 
 type AuthService interface {
-	Register(req *dto.RegisterRequest) error
 	Login(req *dto.LoginRequest) (*dto.LoginResponse, error)
 	GetPermissionData(id string) (*dto.GetPermissionResponse, error)
 }
@@ -24,38 +21,6 @@ func NewAuthService(r repository.AuthRepository) *authService {
 	return &authService{
 		repository: r,
 	}
-}
-
-func (s *authService) Register(req *dto.RegisterRequest) error {
-	// cek email pada database
-	if emailExist := s.repository.EmailExist(req.Email); emailExist {
-		return &errorhandler.BadRequestError{MessageText: "email alredy exist"}
-	}
-
-	passwrodHash, err := helper.HashPassword(req.Password)
-	if err != nil {
-		return &errorhandler.InternalServerError{MessageText: err.Error()}
-	}
-	roleID, err := strconv.Atoi(req.Role)
-	if err != nil {
-		return &errorhandler.BadRequestError{MessageText: "Invalid role ID"}
-	}
-
-	user := entity.User {
-		Name: req.Name,
-		UserName: req.UserName,
-		Email: req.Email,
-		NoHp: req.NoHp,
-		Password: passwrodHash,
-		IDRole: roleID,
-		KodeWilayah: req.KodeWilayah,
-	}
-	
-	if err := s.repository.Register(&user); err != nil {
-		return &errorhandler.InternalServerError{MessageText: err.Error()}
-	}
-
-	return nil
 }
 
 func (s *authService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -84,13 +49,13 @@ func (s *authService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) {
 		UserData: "",
 		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
-		KodeWilayah: user.KodeWilayah,
-		KodeWilayahProses: user.KodeWilayahProses,
+		KodeWilayah: user.KdWil,
+		KodeWilayahProses: user.KdWilKerja,
 		NoHp: user.NoHp,
 		NoWa: user.NoWa,
-		UserNameSipandu: user.UserNameSipandu,
-		UserPasswordSipandu: user.UserPasswordSipandu,
-		IDRole: user.IDRole,
+		UserNameSipandu: user.UsernameSipandu,
+		UserPasswordSipandu: user.UserpasswordSipandu,
+		IDRole: user.IdRole,
 		Token: token,
 		TokenExpiredAt: helper.GetTokenExpirationTime(),
 		PhotoUrl: "https://ui-avatars.com/api/" ,
@@ -104,7 +69,7 @@ func (s *authService) GetPermissionData(id string) (*dto.GetPermissionResponse, 
 		return nil, fmt.Errorf("error user tidak ditemukan: %v", err)
 	}
 
-	role, err := s.repository.GetRoleByID(user.IDRole)
+	role, err := s.repository.GetRoleByID(user.IdRole)
 	if err != nil {
 		return nil, fmt.Errorf("error role tidak ditemukan: %v", err)
 	}

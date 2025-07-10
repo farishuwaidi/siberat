@@ -18,27 +18,6 @@ func NewAuthHandler(s service.AuthService) *authHandler {
 	return &authHandler{service: s}
 }
 
-func (h *authHandler) Register(c *gin.Context) {
-	var register dto.RegisterRequest
-
-	if err := c.ShouldBindJSON(&register); err != nil {
-		errorhandler.HandlerError(c, &errorhandler.BadRequestError{MessageText: err.Error()}, register)
-		return
-	}
-	if err := h.service.Register(&register); err != nil {
-		errorhandler.HandlerError(c, err, register)
-		return
-	}
-
-	res := helper.Response(dto.ResponseParams{
-		Code:    http.StatusCreated,
-		Success: true,
-		Message: "RegisterSuccessfuly",
-	})
-
-	c.JSON(http.StatusCreated, res)
-}
-
 func (h *authHandler) Login(c *gin.Context) {
 	var login dto.LoginRequest
 
@@ -99,4 +78,3 @@ func (h *authHandler) GetPermissionData(c *gin.Context) {
 	}
 	c.JSON (http.StatusOK, permission)
 }
-

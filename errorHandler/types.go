@@ -37,6 +37,14 @@ func (c *InternalServerError) Status() int { return http.StatusNotFound}
 func (c *InternalServerError) Message() string { return c.MessageText}
 
 func (c *UnAuthorizedError) Error() string { return c.MessageText }
-func (c *UnAuthorizedError) Code() string { return c.CodeErr.(string) }
+func (c *UnAuthorizedError) Code() string {
+	if c.CodeErr == nil {
+		return "0040"
+	}
+	if codeStr, ok := c.CodeErr.(string); ok {
+		return codeStr
+	}
+	return "0040"
+}
 func (c *UnAuthorizedError) Status() int { return http.StatusNotFound}
 func (c *UnAuthorizedError) Message() string { return c.MessageText}

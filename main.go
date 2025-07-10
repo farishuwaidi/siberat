@@ -34,7 +34,7 @@ func main() {
 	})
 
 	router.AuthRouter(api)
-	router.TestRoute(api)
+	// router.TestRoute(api)
 	router.UserRouter(api)
 	router.ReferenceRoute(api)
 

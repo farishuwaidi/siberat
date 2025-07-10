@@ -13,11 +13,11 @@ type User struct {
 	RememberToken string `gorm:"column:remember_token"`
 	CreatedAt 	time.Time `gorm:"column:created_at"`
 	UpdatedAt 	time.Time	`gorm:"column:updated_at"`
-	KodeWilayah string `gorm:"column:kd_wil"`
-	KodeWilayahProses string `gorm:"column:kd_wil_kerja"`
+	KdWil string `gorm:"column:kd_wil"`
+	KdWilKerja string `gorm:"column:kd_wil_kerja"`
 	NoHp 		string `gorm:"column:no_hp"`
 	NoWa 		string `gorm:"column:no_wa"`
-	UserNameSipandu string `gorm:"column:username_sipandu" default:"sistem_pab"`
-	UserPasswordSipandu string `gorm:"column:userpassword_sipandu" default:"1"`
-	IDRole 		int `gorm:"column:id_role"`
+	UsernameSipandu string `gorm:"column:username_sipandu" default:"sistem_pab"`
+	UserpasswordSipandu string `gorm:"column:userpassword_sipandu" default:"1"`
+	IdRole 		int `gorm:"column:id_role"`
 }
