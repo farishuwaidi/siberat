@@ -33,10 +33,8 @@ func main() {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
-	router.AuthRouter(api)
+	router.InitRouter(api)
 	// router.TestRoute(api)
-	router.UserRouter(api)
-	router.ReferenceRoute(api)
 
 	r.Run(fmt.Sprintf("0.0.0.0:%v", config.ENV.PORT))
 }

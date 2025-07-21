@@ -47,7 +47,7 @@ type GetUserDetailRequest struct {
 }
 
 type GetUserDetailResponse struct {
-	ID                  int     `json:"id"`
+	ID                  *int     `json:"id"`
 	SurName             string  `json:"sur_name"`
 	Email               string  `json:"email"`
 	Username            string  `json:"username"`

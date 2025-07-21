@@ -3,6 +3,7 @@ package helper
 import (
 	"Siberat/dto"
 	"fmt"
+	"log"
 )
 
 type ResponseWithData struct {
@@ -68,5 +69,60 @@ func ErrorResponseWithParam(code, message string, param any) any {
 		Data: []any{},
 		Message: message,
 		Param: param,
+	}
+}
+
+func ErrorValidation(message string) *ResponseWithData {
+	return &ResponseWithData{
+		Code:    "400",
+		Success: false,
+		Message: message,
+		Data:    nil,
+		Param:   nil,
+	}
+}
+
+// Untuk error internal server (misal DB error, panic)
+func ErrorInternal(message string, err error) *ResponseWithData {
+	log.Printf("[INTERNAL ERROR] %s: %v", message, err)
+	return &ResponseWithData{
+		Code:    "500",
+		Success: false,
+		Message: message,
+		Data:    nil,
+		Param:   nil,
+	}
+}
+
+// Untuk error jika data tidak ditemukan
+func ErrorNotFound(message string) *ResponseWithData {
+	return &ResponseWithData{
+		Code:    "404",
+		Success: false,
+		Message: message,
+		Data:    nil,
+		Param:   nil,
+	}
+}
+
+// Untuk response sukses dengan data
+func Success(message string) *ResponseWithData {
+	return &ResponseWithData{
+		Code:    "200",
+		Success: true,
+		Message: message,
+		Data:    nil,
+		Param:   nil,
+	}
+}
+
+// Untuk response sukses dengan data dan param tambahan
+func SuccessWithData(message string, data any, param any) *ResponseWithData {
+	return &ResponseWithData{
+		Code:    "200",
+		Success: true,
+		Message: message,
+		Data:    data,
+		Param:   param,
 	}
 }

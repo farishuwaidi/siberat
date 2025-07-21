@@ -1,4 +1,4 @@
-package router
+package routinter
 
 import (
 	"Siberat/config"

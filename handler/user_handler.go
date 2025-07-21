@@ -75,6 +75,16 @@ func (h *UserHandler) GetUserDetail(c *gin.Context) {
 		return
 	}
 
+	if user.ID == nil {
+		c.JSON(http.StatusNotFound, helper.Response(dto.ResponseParams{
+			Code: http.StatusNotFound,
+			Success: false,
+			Message: "Data not found",
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
 		Code: http.StatusOK,
 		Success: true,
