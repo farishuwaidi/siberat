@@ -53,11 +53,92 @@ func (h *ObjekHandler) GetObjekByNab(c *gin.Context) {
 		return
 	}
 
+
 	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
 		Code: http.StatusOK,
 		Success: true,
 		Message: "sukses",
 		Data: objek,
+		Param: req,
+	}))
+}
+
+func (h *ObjekHandler) GetObjekSubjekByNab(c *gin.Context) {
+	var req dto.ObjekPabRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			Code: http.StatusBadRequest,
+			Success: false,
+			Message: "parameter not valid",
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+
+	objek, err := h.service.GetObjekSubjek(req.NoAb1, req.NoAb2, req.NoAb3)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, helper.Response(dto.ResponseParams{
+			Code: http.StatusInternalServerError,
+			Success: false,
+			Message: err.Error(),
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+
+	if objek == nil {
+		c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
+			Code: http.StatusNotFound,
+			Success: false,
+			Message: "Data tidak ditemukan",
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+
+
+	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
+		Code: http.StatusOK,
+		Success: true,
+		Message: "sukses",
+		Data: objek,
+		Param: req,
+	}))
+}
+
+func (h *ObjekHandler) GetInfoPAB(c *gin.Context) {
+	var req dto.ObjekPabRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+			c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			Code: http.StatusBadRequest,
+			Success: false,
+			Message: "invalid param",
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+
+	result, err := h.service.GetInfoPAB(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			Code: http.StatusBadRequest,
+			Success: false,
+			Message: err.Error(),
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+
+	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
+		Code: http.StatusOK,
+		Success: true,
+		Message: "sukses",
+		Data: result,
 		Param: req,
 	}))
 }

@@ -57,3 +57,14 @@ type GetPermissionResponse struct {
 	StsTableMngmt       string `json:"sts_table_mngmt"`         // Table management status
 	StsVerif            string `json:"sts_verif"`               // Verification status
 }
+
+type UpdatePassword struct {
+	ID              int    `json:"id"`
+	Password        string `json:"password"`
+	PasswordBaru    string `json:"password_baru"`
+	PasswordConfirm string `json:"password_confirm"`
+}
+
+type UpdatePasswordResponse struct {
+	Message string `json:"message"`
+}

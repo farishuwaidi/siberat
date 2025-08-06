@@ -2,6 +2,7 @@ package helper
 
 import (
 	"Siberat/dto"
+	"errors"
 	"fmt"
 	"log"
 )
@@ -125,4 +126,8 @@ func SuccessWithData(message string, data any, param any) *ResponseWithData {
 		Data:    data,
 		Param:   param,
 	}
+}
+
+func NewCustomError(message string) error {
+	return errors.New(message)
 }

@@ -18,4 +18,5 @@ func AuthRouter(api *gin.RouterGroup) {
 	// api.Use(middleware.JWTMiddleWare())
 	// api.POST("/register", middleware.AuthorizeRoles("Petugas Bidang PP", "Petugas Bidang PSIP"),authHandler.Register)
 	api.POST("/get-permission",authHandler.GetPermissionData)
+	api.POST("/update-password", authHandler.UpdatePassword)
 }

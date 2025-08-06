@@ -24,7 +24,7 @@ func (h *authHandler) Login(c *gin.Context) {
 	err := c.ShouldBindJSON(&login)
 	if err != nil {
 		errorhandler.HandlerError(c, &errorhandler.BadRequestError{
-			CodeErr: "0002",
+			Code: "0002",
 			MessageText: "invalid request format",
 		}, login)
 		return
@@ -54,7 +54,7 @@ func (h *authHandler) GetPermissionData(c *gin.Context) {
 	var req dto.GetPermissionRequest
 	if err := c.ShouldBind(&req); err != nil {
 		errorhandler.HandlerError(c, &errorhandler.BadRequestError{
-			CodeErr: "0002",
+			Code: "0002",
 			MessageText: "invalid request format",
 		}, req)
 		return
@@ -63,7 +63,7 @@ func (h *authHandler) GetPermissionData(c *gin.Context) {
 	result, err := h.service.GetPermissionData(req.Id)
 	if err != nil {
 		errorhandler.HandlerError(c, &errorhandler.NotFoundError{
-			CodeErr: "0003",
+			Code: "0003",
 			MessageText: "error, tidak ditemukan data dengan data user berdasarkan id",
 		},req)
 		return
@@ -77,4 +77,36 @@ func (h *authHandler) GetPermissionData(c *gin.Context) {
 		Param: gin.H{"id":req.Id},
 	}
 	c.JSON (http.StatusOK, permission)
+}
+
+func (h *authHandler) UpdatePassword(c *gin.Context) {
+	var req dto.UpdatePassword
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			Code:    http.StatusBadRequest,
+			Success: false,
+			Message: "validation fail",
+			Data: []string{},
+			Param: req,
+		}))
+		return
+	}
+	result, err := h.service.UpdatePassword(&req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, helper.Response(dto.ResponseParams{
+			Code:   http.StatusBadRequest,
+			Success: false,
+			Message: err.Error(),
+			Data:   []string{},
+			Param:  req,
+		}))
+		return
+	}
+	c.JSON(http.StatusOK, helper.Response(dto.ResponseParams{
+		Code:   http.StatusOK,
+		Success: true,
+		Message: "Success",
+		Data:   result,
+		Param:  req,
+	}))
 }

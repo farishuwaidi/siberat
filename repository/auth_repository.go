@@ -12,6 +12,7 @@ type AuthRepository interface {
 	GetUserByUsername(username string) (*entity.User, error)
 	GetUserByID(id string) (*entity.User, error)
 	GetRoleByID(id int) (*entity.RoleUser, error)
+	UpdatePassword(id int, newHashPassword string) error
 }
 
 type authRepository struct {
@@ -52,4 +53,10 @@ func (r *authRepository) GetRoleByID(id int) (*entity.RoleUser, error) {
 		return nil, err
 	}
 	return &role, nil
+}
+
+func (r *authRepository) UpdatePassword(id int, newHashPassword string) error {
+	return r.db.Model(&entity.User{}).
+		Where("id = ? ", id).
+		Update("password", newHashPassword).Error
 }

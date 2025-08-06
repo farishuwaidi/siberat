@@ -11,6 +11,7 @@ import (
 type AuthService interface {
 	Login(req *dto.LoginRequest) (*dto.LoginResponse, error)
 	GetPermissionData(id string) (*dto.GetPermissionResponse, error)
+	UpdatePassword(req *dto.UpdatePassword) (*dto.UpdatePasswordResponse, error)
 }
 
 type authService struct {
@@ -97,4 +98,27 @@ func (s *authService) GetPermissionData(id string) (*dto.GetPermissionResponse, 
 		StsTableMngmt: toStr(role.StsTableMngmt),
 		StsVerif: toStr(role.StsVerif),
 	}, nil
+}
+
+func (s *authService) UpdatePassword(req *dto.UpdatePassword) (*dto.UpdatePasswordResponse, error) {
+	user, err := s.repository.GetUserByID(fmt.Sprintf("%d", req.ID))
+	if err != nil {
+		return nil, &errorhandler.NotFoundError{ MessageText: "user tidak ditemukan"}
+	}
+
+	if err := helper.VerifyPassword(user.Password, req.Password); err != nil {
+		return nil, &errorhandler.BadRequestError{MessageText: "password lama tidak sesuai"}
+	}
+
+	if req.PasswordBaru != req.PasswordConfirm {
+		return nil, &errorhandler.BadRequestError{ MessageText: "konfirmasi password tidak sesuai"}
+	}
+
+	hashPassword := helper.HashPassword(req.PasswordBaru)
+
+	if err := s.repository.UpdatePassword(user.ID, hashPassword); err != nil {
+		return nil, &errorhandler.InternalServerError{MessageText: "gagal update password"}
+	}
+
+	return &dto.UpdatePasswordResponse{Message: "password berhasil diubah"}, nil
 }

@@ -13,4 +13,6 @@ func InitRouter(api *gin.RouterGroup) {
 	routinter.PenetapanRoute(api)
 	routinter.ReferenceRoute(api)
 	routinter.UserRouter(api)
+	routinter.SubjekRoute(api)
+	routinter.NjabRouter(api)
 }
